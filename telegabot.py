@@ -8,7 +8,7 @@ def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton("Поздороваться👋")
     markup.add(btn1)
-    bot.send_message(message.from_user.id, "Здарова, от меня ты можешь получить как желания, так и гнилания\nТак же можешь добавить свои", reply_markup=markup)
+    bot.send_message(message.from_user.id, "Здорова! ✨ От меня ты можешь получить как желания ✨, так и гнилания! 🤢\nТак же можешь добавить свои! 💥", reply_markup=markup)
     userdata[message.chat.id] = {
         'waitingAnswerP': False,
         'waitingAnswerG': False,
@@ -28,14 +28,14 @@ def handle_text(message):
         userdata[message.chat.id]['waitingAnswerG']=False
         userdata[message.chat.id]['start']=True
         bot.send_message(message.from_user.id, "Гнилание добавлено")
-    if message.text == 'Поздороваться👋' or userdata[message.chat.id]['start']:
+    if message.text == 'Поздороваться👋' or userdata[message.chat.id]['start'] or message.text == 'Вернуться':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton('Пожелание 👼')
         btn2 = types.KeyboardButton('Гнилание 😈')
         btn3 = types.KeyboardButton('Добавить')
         markup.add(btn1,btn2,btn3)
         userdata[message.chat.id]['start']=False
-        bot.send_message(message.from_user.id, "Выбери, что хочешь сделать", reply_markup=markup)
+        bot.send_message(message.from_user.id, "Выбери, что хочешь", reply_markup=markup)
     if message.text == 'Пожелание 👼':
         with open('goodwords.txt', 'r', encoding='utf-8') as file:
             lines = file.readlines()
