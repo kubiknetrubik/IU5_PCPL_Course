@@ -1,8 +1,12 @@
 import telebot
 from telebot import types
 from random import *
+import os
+from dotenv import load_dotenv
+load_dotenv()
 userdata={}
-bot = telebot.TeleBot('8387480130:AAFnB0jD6xSvyowGlINLGNhfvjCmI7U2b30')
+token= os.getenv('TOKEN')
+bot = telebot.TeleBot(token)
 def init_user(chat_id):
     if chat_id not in userdata:
         userdata[chat_id] = {
