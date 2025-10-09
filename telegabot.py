@@ -3,19 +3,24 @@ from telebot import types
 from random import *
 userdata={}
 bot = telebot.TeleBot('8387480130:AAFnB0jD6xSvyowGlINLGNhfvjCmI7U2b30')
+def init_user(chat_id):
+    if chat_id not in userdata:
+        userdata[chat_id] = {
+            'waitingAnswerP': False,
+            'waitingAnswerG': False,
+            'start': True
+        }
 @bot.message_handler(commands=['start'])
 def start(message):
+    init_user(message.chat.id)
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton("Поздороваться👋")
     markup.add(btn1)
     bot.send_message(message.from_user.id, "Здорова! ✨ От меня ты можешь получить как желания ✨, так и гнилания! 🤢\nТак же можешь добавить свои! 💥", reply_markup=markup)
-    userdata[message.chat.id] = {
-        'waitingAnswerP': False,
-        'waitingAnswerG': False,
-        'start':True
-    }
+ 
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
+    init_user(message.chat.id)
     if userdata[message.chat.id]['waitingAnswerP']:
         with open('goodwords.txt', 'a', encoding='utf-8') as file:
             file.write(f'{message.text}\n')
