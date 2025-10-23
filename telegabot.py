@@ -58,7 +58,6 @@ def show_coin_selection(chat_id):
         markup.add(types.KeyboardButton(symbol))
     
     markup.add(types.KeyboardButton('🔙 Назад'))
-    markup.add(types.KeyboardButton('🎯 Другая монета'))
     
     bot.send_message(
         chat_id,
@@ -72,9 +71,6 @@ def handle_coin_selection(message):
     if message.text == '🔙 Назад':
         user_states[chat_id] = STATES['MAIN_MENU']
         show_main_menu(chat_id)
-        return
-    elif message.text == '🎯 Другая монета':
-        bot.send_message(chat_id, "Напиши полное название монеты (например: bitcoin, ethereum):")
         return
     
     coin_id = None
