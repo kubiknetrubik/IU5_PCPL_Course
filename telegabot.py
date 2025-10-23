@@ -24,6 +24,7 @@ STATES = {
     'VIEW_PORTFOLIO': 4,
     'DELETE_COIN': 5
 }
+temp_dict={}
 user_states={}
 user_temp_data={}
 def get_user_state(chat_id):
@@ -53,10 +54,14 @@ def handle_main_menu(message):
 def show_coin_selection(chat_id):
     user_states[chat_id] = STATES['ADD_COIN_SELECT']
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    
+    port=get_user_portfolio(chat_id)
     for symbol in POPULAR_COINS.keys():
         markup.add(types.KeyboardButton(symbol))
-    
+    for key, value in port.items():
+        if key not in POPULAR_COINS.values():
+            markup.add(types.KeyboardButton(key.upper()))
+            temp_dict[key.upper()]=key
+
     markup.add(types.KeyboardButton('🔙 Назад'))
     
     bot.send_message(
@@ -76,6 +81,9 @@ def handle_coin_selection(message):
     coin_id = None
     if message.text in POPULAR_COINS:
         coin_id = POPULAR_COINS[message.text]
+    elif message.text in temp_dict:
+        coin_id = temp_dict[message.text]
+        temp_dict.clear()
     else:
         coin_id = message.text.lower()
     
