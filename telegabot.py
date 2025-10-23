@@ -308,13 +308,13 @@ def delete_coin_records(user_id, coin_id):
         pass
     return False
 
-# Обработчик для любых сообщений вне состояний
+
 @bot.message_handler(func=lambda message: True)
 def handle_other_messages(message):
     if message.chat.id not in user_states:
         bot.send_message(message.chat.id, "Введи /start чтобы начать")
 
-# Запуск бота
+
 if __name__ == "__main__":
     print("Бот запущен")
     bot.polling(none_stop=True)
