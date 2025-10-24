@@ -4,6 +4,7 @@ from random import *
 import os
 import requests
 import json
+from time import *
 from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
@@ -27,6 +28,7 @@ STATES = {
 temp_dict={}
 user_states={}
 user_temp_data={}
+cash_price={}
 def get_user_state(chat_id):
     return user_states.get(chat_id, STATES['MAIN_MENU'])
 @bot.message_handler(commands=['start'])
@@ -167,6 +169,7 @@ def show_portfolio(chat_id):
         total_invested_coin = sum(p['quantity'] * p['buy_price'] for p in purchases)
         
         current_price = get_current_price(coin_id)
+        print(current_price)
         if current_price:
             current_value = total_quantity * current_price
             profit = current_value - total_invested_coin
@@ -184,6 +187,8 @@ def show_portfolio(chat_id):
             
             total_invested += total_invested_coin
             total_current += current_value
+        else:
+            portfolio_text += "⚠️ Не удалось получить текущую цену.\n\n"
     
     if total_invested > 0:
         total_profit = total_current - total_invested
@@ -256,11 +261,27 @@ def check_coin_exists(coin_id):
         return False
 
 def get_current_price(coin_id):
+    now = time()
     try:
-        url = "https://api.coingecko.com/api/v3/simple/price"
-        params = {'ids': coin_id, 'vs_currencies': 'usd'}
-        response = requests.get(url, params=params)
-        return response.json()[coin_id]['usd']
+        if str(coin_id) not in cash_price:
+            cash_price[str(coin_id)]={}
+            
+            url = "https://api.coingecko.com/api/v3/simple/price"
+            params = {'ids': coin_id, 'vs_currencies': 'usd'}
+            response = requests.get(url, params=params)
+            cash_price[str(coin_id)]['price']=response.json()[coin_id]['usd']
+            cash_price[str(coin_id)]['time']=now
+            return response.json()[coin_id]['usd']
+        else:
+            if now-cash_price[str(coin_id)]['time']>30:
+                url = "https://api.coingecko.com/api/v3/simple/price"
+                params = {'ids': coin_id, 'vs_currencies': 'usd'}
+                response = requests.get(url, params=params)
+                cash_price[str(coin_id)]['price']=response.json()[coin_id]['usd']
+                cash_price[str(coin_id)]['time']=now
+                return response.json()[coin_id]['usd']
+            else:
+                return cash_price[str(coin_id)]['price']
     except:
         return None
 
