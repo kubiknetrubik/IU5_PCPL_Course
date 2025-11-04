@@ -17,7 +17,7 @@ class Unique(object):
             
             if key not in self.seen:
                 self.seen.add(key)
-                return item
+                return key
 
     def __iter__(self):
         return self
