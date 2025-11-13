@@ -7,7 +7,7 @@ from unique import Unique
 with open("lab_python_fp/data_light.json", encoding="utf-8") as file:
         data = json.load(file)
 @print_result
-def f1(arg)-> list[str]:
+def f1(arg):
     return sorted(Unique([User["job-name"] for User in arg],ignore_case=True))
 
 
