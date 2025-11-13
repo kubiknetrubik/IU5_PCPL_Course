@@ -3,7 +3,7 @@ class Unique(object):
     def __init__(self, items, **kwargs):
         self.ignore_case = kwargs.get('ignore_case', False)
         self.items = iter(items)
-        self.seen = set()
+        self.seen =[]
         
 
     def __next__(self):
@@ -16,7 +16,7 @@ class Unique(object):
                 key = item
             
             if key not in self.seen:
-                self.seen.add(key)
+                self.seen.append(key)
                 return key
 
     def __iter__(self):
